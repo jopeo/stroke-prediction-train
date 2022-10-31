@@ -1,0 +1,41 @@
+With imbalanced full data set:
+Accuracy score: 0.9604940381024446
+              precision    recall  f1-score   support
+         0.0       0.96      1.00      0.98     78700
+         1.0       0.50      0.00      0.00      3237
+    accuracy                           0.96     81937
+   macro avg       0.73      0.50      0.49     81937
+weighted avg       0.94      0.96      0.94     81937
+
+
+
+With random undersampling:
+Accuracy score: 0.736907152788506
+              precision    recall  f1-score   support
+         0.0       0.76      0.71      0.73      3257
+         1.0       0.73      0.77      0.74      3216
+    accuracy                           0.74      6473
+   macro avg       0.74      0.74      0.74      6473
+weighted avg       0.74      0.74      0.74      6473
+
+
+
+With NearMiss-1:
+Accuracy score: 0.8663679901127761
+              precision    recall  f1-score   support
+         0.0       0.84      0.91      0.87      3257
+         1.0       0.90      0.83      0.86      3216
+    accuracy                           0.87      6473
+   macro avg       0.87      0.87      0.87      6473
+weighted avg       0.87      0.87      0.87      6473
+
+
+
+With NearMiss-3:
+Accuracy score: 0.7616252124208249
+              precision    recall  f1-score   support
+         0.0       0.76      0.77      0.76      3257
+         1.0       0.76      0.76      0.76      3216
+    accuracy                           0.76      6473
+   macro avg       0.76      0.76      0.76      6473
+weighted avg       0.76      0.76      0.76      6473

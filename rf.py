@@ -2,6 +2,8 @@
 
 import pandas as pd
 import numpy as np
+# import matplotlib
+# matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
@@ -11,20 +13,21 @@ from sklearn.metrics import mean_absolute_error, accuracy_score, confusion_matri
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
 from joblib import dump, load
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, validation_curve
+from imblearn.under_sampling import ClusterCentroids, RandomUnderSampler, NearMiss
 
 
 raw_file = "raw.h5"
 cleaned_file = "stroke_cleaned.h5"
-model_name = "strokemodel2.joblib"
+model_name = "stroke_model_nm-3.joblib"
 outcome = "CVDSTRK3"    # (Ever told) (you had) a stroke.
 
 # todo: check hyperparams:
 random_state = 1
-n_estimators = 46
-criterion = 'gini'
-max_depth = None
-max_features = 'sqrt'
+n_estimators = [50, 100, 250, 500]    #, 300, 500, 750, 800, 1200]
+# criterion = 'gini'
+# max_depth = None
+# max_features = 'sqrt'
 # Bootstrap =
 # Min_samples_split =
 # Min_sample_leaf =
@@ -260,20 +263,95 @@ if __name__ ==  "__main__":
 	X
 	
 	
-	X.to_hdf(cleaned_file, "X", complevel=2)  # to save cleaned data
+	# X.to_hdf(cleaned_file, "X", complevel=2)  # to save cleaned data
 	# X = pd.read_hdf(cleaned_file)  # to read cleaned data
 	X.shape
 	
-	train_X, val_X, train_y, val_y = train_test_split(X, y, random_state=1)
+	# rus = RandomUnderSampler(random_state=random_state)
+	# X_rus, y_rus = rus.fit_resample(X, y)
+	# y_rus.value_counts()
+	# X_rus.shape
+	# y.value_counts()
+	
+	# cc = ClusterCentroids(random_state=random_state)
+	# X_cc, y_cc = cc.fit_resample(X, y)
+	# y_cc.value_counts()
+	# X_cc.shape
+	
+	nm = NearMiss(version=3)
+	X_nm, y_nm = nm.fit_resample(X, y)
+	y_nm.value_counts()
+	X_nm.shape
+	
+	
+	train_X, val_X, train_y, val_y = train_test_split(X_nm, y_nm,  # X_rus, y_rus,  # X, y, # X_cc, y_cc,  #
+	                                                  random_state=random_state)  # ,, stratify=y)  #
 	train_X.shape
+	train_y.describe()
+	train_y.value_counts()
+	val_y.value_counts()
 	
-	X_cats = train_X.drop([i for i in X.columns if i in X.columns and i not in features_cat], axis=1)
-	X_nums = train_X.drop([i for i in X.columns if i in X.columns and i not in features_num], axis=1)
-	X_cats.shape
-	X_nums.shape
-	X_cats.head()
+	# X_cats = train_X.drop([i for i in X.columns if i in X.columns and i not in features_cat], axis=1)
+	# X_nums = train_X.drop([i for i in X.columns if i in X.columns and i not in features_num], axis=1)
+	# X_cats.shape
+	# X_nums.shape
+	# X_cats.head()
 	
-	rf = RandomForestClassifier()
+	rf = RandomForestClassifier(random_state=random_state)
+	rf.fit(X_nm, y_nm)  # train_X, train_y)    # X, y)  # X_rus, y_rus) #
+	
+	dump(rf, model_name, compress=3)
+
+	
+	y_predictions = rf.predict(val_X)
+	
+	accuracy_score(val_y, y_predictions)    # 0.9605428560967573
+	
+	matrix = confusion_matrix(val_y, y_predictions)
+	matrix
+	matrix = matrix.astype('float') / matrix.sum(axis=1)[:, np.newaxis]
+	val_X.value_counts()
+	val_y.value_counts()
+
+	
+	plt.figure(figsize=(8, 7))
+	sns.set(font_scale=1.4)
+	sns.heatmap(matrix, annot=True, annot_kws={
+			'size': 10},
+	            cmap=plt.cm.Greens, linewidths=0.2)
+	class_names = ["No stroke", "Stroke"]
+	tick_marks = np.arange(len(class_names))
+	tick_marks2 = tick_marks + 0.5
+	plt.xticks(tick_marks, class_names, rotation=25)
+	plt.yticks(tick_marks2, class_names, rotation=0)
+	plt.xlabel('Predicted label')
+	plt.ylabel('True label')
+	plt.title('Confusion Matrix for Random Forest Model - NearMiss-3')
+	plt.show()
+	
+	print(classification_report(val_y, y_predictions))
+	
+	train_scoreNum, test_scoreNum = validation_curve(
+			RandomForestClassifier(),
+			X=train_X, y=train_y,
+			param_name='n_estimators',
+			param_range=n_estimators,
+			cv=3,
+			verbose=2)
+	
+	train_mean = np.mean(train_scoreNum, axis=1)
+	test_mean = np.mean(test_scoreNum, axis=1)
+	
+	plt.plot(n_estimators, train_mean,
+	         marker='o', markersize=5,
+	         color='blue', label='Training Accuracy')
+	plt.plot(n_estimators, test_mean,
+	         marker='o', markersize=5,
+	         color='green', label='Validation Accuracy')
+	
+	
+	
+	
 	rf_random = RandomizedSearchCV(estimator=rf,
 	                               param_distributions=param_grid,
 	                               n_iter=100,
@@ -293,11 +371,11 @@ if __name__ ==  "__main__":
 	best_grid = grid_search.best_estimator_
 	
 	# now, a random forest model
-	forest_model = RandomForestClassifier(random_state=random_state,
-	                                      n_estimators=n_estimators,
-	                                      criterion=criterion,
-	                                      max_depth=max_depth,
-	                                      max_features=max_features)
+	forest_model = RandomForestClassifier(random_state=random_state)
+	                                      # n_estimators=n_estimators,
+	                                      # criterion=criterion,
+	                                      # max_depth=max_depth,
+	                                      # max_features=max_features)
 	forest_model.fit(X, y)
 	
 	dump(forest_model, model_name, compress=3)

@@ -2,23 +2,17 @@
 
 import pandas as pd
 import numpy as np
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestClassifier
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import mean_absolute_error, accuracy_score, confusion_matrix, classification_report
+
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
 from joblib import dump, load
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
-
-param_grid = {"bootstrap": [True],
-              "max_depth": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, None],
-              "max_features": ["auto", "sqrt"],
-              "min_samples_leaf": [1, 2, 4],
-              "min_samples_split": [2, 5, 10],
-              "n_estimators": [200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000]
-              }
 
 raw_file = "raw.h5"
 cleaned_file = "stroke_cleaned.h5"
@@ -39,6 +33,13 @@ max_features = 'sqrt'
 # max_samples =
 # Class_weight =
 
+param_grid = {"bootstrap": [True],
+              "max_depth": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, None],
+              "max_features": ["auto", "sqrt"],
+              "min_samples_leaf": [1, 2, 4],
+              "min_samples_split": [2, 5, 10],
+              "n_estimators": [200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000]
+              }
 
 features_cat = ['_STATE',       # geographical state]
                 'SEXVAR',       # Sex of Respondent 1 MALE, 2 FEMALE

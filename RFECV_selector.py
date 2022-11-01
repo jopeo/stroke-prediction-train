@@ -9,8 +9,7 @@ from sklearn.impute import SimpleImputer
 from joblib import dump, load
 
 raw_file = "raw.h5"
-cleaned_file = "stroke_cleaned.h5"
-model_name = "stroke_model_nm-3.joblib"
+imputed_cleaned_file = "stroke_X_imputed_before_RFE.h5"
 RFECV_selector_name = "RFECV_selector_stroke.joblib"
 outcome = "CVDSTRK3"    # (Ever told) (you had) a stroke.
 
@@ -40,11 +39,12 @@ if __name__ ==  "__main__":
 	print(empty_train_columns)
 	
 	X = X.drop(empty_train_columns, axis=1)     # ['TOLDCFS', 'HAVECFS', 'WORKCFS']
+	X.shape
 	
 	imp = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
 	X = pd.DataFrame(imp.fit_transform(X), columns=X.columns)
 	X.isnull().values.any()
-	X.to_hdf("./source/stroke_X_imputed_before_RFE.h5", "X", complevel=2)
+	X.to_hdf(imputed_cleaned_file, "X", complevel=2)
 	
 	selector = RFECV(RandomForestClassifier(), min_features_to_select=30, cv=3, verbose=2, n_jobs=-1)
 	selector.fit(X, y)
@@ -55,7 +55,7 @@ if __name__ ==  "__main__":
 	features_to_keep = selector.get_feature_names_out(X.columns.values)
 	print(features_to_keep)
 	
-	with open('features.txt', 'w') as f:
+	with open('features.txt', 'w+') as f:
 		f.write(str(features_to_keep))
 	
 	

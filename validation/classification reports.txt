@@ -9,7 +9,7 @@ weighted avg       0.94      0.96      0.94     81937
 
 
 
-With random undersampling:
+With Random Under Sampling:
 Accuracy score: 0.736907152788506
               precision    recall  f1-score   support
          0.0       0.76      0.71      0.73      3257

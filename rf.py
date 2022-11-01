@@ -245,6 +245,7 @@ if __name__ ==  "__main__":
 	# y.describe()
 	# y.shape
 	# len([i for i in y if i == 1])
+	# y.value_counts()
 	# y.value_counts(1)
 	X = X.drop([outcome], axis=1)
 	

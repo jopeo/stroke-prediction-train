@@ -8,12 +8,12 @@ from sklearn.feature_selection import RFE
 from sklearn.impute import SimpleImputer
 from joblib import dump, load
 
+outcome = "CVDSTRK3"  # (Ever told) (you had) a stroke.
 raw_file = "raw.h5"
 RFE_selector_name = "RFE_selector_stroke_2.joblib"
-features_txt = "features_RFE_2.txt"
+features_txt = "features_stroke_RFE_2.txt"
 step = 0.05
 n_features = 0.15
-outcome = "CVDSTRK3"  # (Ever told) (you had) a stroke.
 random_state = 1
 
 if __name__ == "__main__":
@@ -24,7 +24,7 @@ if __name__ == "__main__":
 	data = data[data.DISPCODE != 1200]  # == 1200    final disposition (1100 completed or not 1200)
 	data.shape
 	
-	y = abs(data.CVDSTRK3 - 2)
+	y = abs(data[outcome] - 2)
 	X = data.copy()
 	X = X.drop([outcome], axis=1)
 	
@@ -47,7 +47,7 @@ if __name__ == "__main__":
 	# X.to_hdf(imputed_cleaned_file, "X", complevel=2)
 	
 	selector = RFE(RandomForestClassifier(), n_features_to_select=n_features,
-	               step=step, verbose=3)
+	               step=step, verbose=2)
 	selector.fit(X, y)
 	
 	dump(selector, RFE_selector_name, compress=3)

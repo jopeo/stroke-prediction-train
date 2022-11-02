@@ -25,12 +25,10 @@ if __name__ == "__main__":
 	data.shape
 	
 	y = abs(data[outcome] - 2)
-	X = data.copy()
-	X = X.drop([outcome], axis=1)
+	X = data.copy().drop([outcome], axis=1)
 	
 	headers = X.columns.values
 	X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-	
 	empty_train_columns = []
 	for col in X_train.columns.values:
 		# all the values for this feature are null

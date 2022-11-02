@@ -122,6 +122,7 @@ features = [
 		'CVDINFR4',  # (Ever told) you had a heart attack, also called a myocardial infarction?
 		'CVDCRHD4',  # (Ever told) (you had) angina or coronary heart disease?
 		'RMVTETH4',  # Not including teeth lost for injury or orthodontics, how many of your permanent teeth have been removed because of tooth decay or gum disease?
+		'_DENVST3',  # dentist in past year? 1 yes 2 no 9 don't know
 		'FALL12MN',     # In the past 12 months, how many times have you fallen?
 		'DIABETE4',     # (Ever told) (you had) diabetes?
 		'CHCKDNY2',     # Not including kidney stones, bladder infection or incontinence, were you ever told you had kidney disease?  1 yes 2 no
@@ -133,7 +134,6 @@ features = [
 		'CHCCOPD2',     # (Ever told) (you had) chronic obstructive pulmonary disease, C.O.P.D., emphysema or chronic bronchitis? 1 yes 2 no
 		'_ASTHMS1',     # asthma? 1 current 2 former 3 never
 		'_DRDXAR2',     # ever arthritis? 1 Diagnosed with arthritis 2 Not diagnosed with arthritis
-		'_DENVST3',     # dentist in past year? 1 yes 2 no 9 don't know
 ]
 len(features)
 

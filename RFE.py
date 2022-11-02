@@ -9,9 +9,10 @@ from sklearn.impute import SimpleImputer
 from joblib import dump, load
 
 raw_file = "raw.h5"
-RFE_selector_name = "RFE_selector_stroke.joblib"
-step = 0.04
-n_features = 0.1
+RFE_selector_name = "RFE_selector_stroke_2.joblib"
+features_txt = "features_RFE_2.txt"
+step = 0.05
+n_features = 0.15
 outcome = "CVDSTRK3"  # (Ever told) (you had) a stroke.
 random_state = 1
 
@@ -46,7 +47,7 @@ if __name__ == "__main__":
 	# X.to_hdf(imputed_cleaned_file, "X", complevel=2)
 	
 	selector = RFE(RandomForestClassifier(), n_features_to_select=n_features,
-	               step=step, verbose=2)
+	               step=step, verbose=3)
 	selector.fit(X, y)
 	
 	dump(selector, RFE_selector_name, compress=3)
@@ -55,7 +56,7 @@ if __name__ == "__main__":
 	features_to_keep = selector.get_feature_names_out(X.columns.values)
 	print(features_to_keep)
 	
-	with open('features_RFE.txt', 'w+') as f:
-		f.write(str(features_to_keep))
+	with open(features_txt, 'w+') as f:
+		f.write(features_to_keep)
 	
 	pass

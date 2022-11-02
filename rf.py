@@ -98,6 +98,49 @@ features_num = ['_AGE80',       #  imputed age value collapsed above 80
                 'SLEPTIM1',  # how many hours of sleep do you get in a 24-hour period?
                 ]
 
+RFE_features = ['_STATE',       # State FIPS Code
+                'FMONTH',       # File Month
+                'IDATE',        #  Interview Date
+                'IMONTH',       #
+                'IDAY',         #
+                'SEQNO',        # Annual Sequence Number
+                '_PSU',         # Primary Sampling Unit (Equal to Annual Sequence Number)
+                'GENHLTH',      # Would you say that in general your health is:
+                'PHYSHLTH',     # Now thinking about your physical health, which includes physical illness and injury, for how many days during the past 30 days was your physical health not good?
+                'MENTHLTH',     # Would you say that in general your health is:
+                'POORHLTH',     # Now thinking about your mental health, which includes stress, depression, and problems with emotions, for how many days during the past 30 days was your mental health not good?
+                'SLEPTIM1',     # On average, how many hours of sleep do you get in a 24-hour period?
+                'CVDINFR4',     # (Ever told) you had a heart attack, also called a myocardial infarction?
+                'CVDCRHD4',     # (Ever told) (you had) angina or coronary heart disease?
+                'DIABAGE3',     # How old were you when you were told you had diabetes?
+                'RMVTETH4',     # Not including teeth lost for injury or orthodontics, how many of your permanent teeth have been removed because of tooth decay or gum disease?
+                'MARITAL',      # Are you: (marital status)
+                'EMPLOY1',      # Are you currently…?
+                'INCOME2',      # Is your annual household income from all sources: (If respondent refuses at any income level, code ´Refused.´)
+                'WEIGHT2',      # About how much do you weigh without shoes? (If respondent answers in metrics, put a 9 in the first column)[Round fractions up.]
+                'HEIGHT3',      # About how tall are you without shoes? (If respondent answers in metrics, put a 9 in the first column)[Round fractions down.]
+                'FLSHTMY3',     # During what month and year did you receive your most recent flu vaccine that was sprayed in your nose or flu shot injected into your arm?
+                'FALL12MN',     # In the past 12 months, how many times have you fallen?
+                'COLNTEST',     # How long has it been since you had this test?
+                'HIVTSTD3',     # Not including blood donations, in what month and year was your last H.I.V. test? (If response is before January 1985, code ´777777´.)
+                'CNCRAGE',      # At what age were you told that you had cancer? (If Response = 2 (Two) or 3 (Three or more), ask: “At what age was your first diagnosis of cancer?”)
+                '_STSTR',       # Sample Design Stratification Variable (Prior to 2011: _STSTR is a five digit number that combines the values for _STATE (first two characters), _GEOSTR (third and fourth character), and _DENSTR2 (final character).)
+                # '_STRWT',       # Stratum weight
+                '_WT2RAKE',     # Design weight used in raking (Stratum weight (_STRWT) multiplied by the raw weighting factor (_RAWRAKE).)
+                '_DUALCOR',     # Dual phone use correction factor
+                # '_LLCPWT2',     # Truncated design weight used in adult combined land line and cell phone raking
+                # '_LLCPWT',      # Truncated design weight used in adult combined land line and cell phone raking
+                # '_MICHD',       # Respondents that have ever reported having coronary heart disease (CHD) or myocardial infarction (MI)
+                '_AGEG5YR',     # Fourteen-level age category
+                '_AGE80',       # Imputed Age value collapsed above 80
+                'HTIN4',        # Reported height in inches
+                # 'HTM4',         # Reported height in meters
+                'WTKG3',        # Reported weight in kilograms
+                '_BMI5'         # Body Mass Index (BMI)
+                '_INCOMG'   ,   # Income categories
+                '_DRNKWK1'  ]   # Calculated total number of alcoholic beverages consumed per week
+
+
 
 def load_data(name):
 	data_1 = pd.read_sas('./source/' + name)

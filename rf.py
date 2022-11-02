@@ -99,39 +99,39 @@ features_num = ['_AGE80',       #  imputed age value collapsed above 80
                 ]
 
 RFE_features = ['_STATE',       # State FIPS Code
-                'FMONTH',       # File Month
-                'IDATE',        #  Interview Date
-                'IMONTH',       #
-                'IDAY',         #
-                'SEQNO',        # Annual Sequence Number
-                '_PSU',         # Primary Sampling Unit (Equal to Annual Sequence Number)
+                # 'FMONTH',       # File Month
+                # 'IDATE',        #  Interview Date
+                # 'IMONTH',       #
+                # 'IDAY',         #
+                # 'SEQNO',        # Annual Sequence Number
+                # '_PSU',         # Primary Sampling Unit (Equal to Annual Sequence Number)
                 'GENHLTH',      # Would you say that in general your health is:
                 'PHYSHLTH',     # Now thinking about your physical health, which includes physical illness and injury, for how many days during the past 30 days was your physical health not good?
-                'MENTHLTH',     # Would you say that in general your health is:
-                'POORHLTH',     # Now thinking about your mental health, which includes stress, depression, and problems with emotions, for how many days during the past 30 days was your mental health not good?
+                'MENTHLTH',     # Now thinking about your mental health, which includes stress, depression, and problems with emotions, for how many days during the past 30 days was your mental health not good?
+                'POORHLTH',     # During the past 30 days, for about how many days did poor physical or mental health keep you from doing your usual activities, such as self-care, work, or recreation?
                 'SLEPTIM1',     # On average, how many hours of sleep do you get in a 24-hour period?
                 'CVDINFR4',     # (Ever told) you had a heart attack, also called a myocardial infarction?
                 'CVDCRHD4',     # (Ever told) (you had) angina or coronary heart disease?
-                'DIABAGE3',     # How old were you when you were told you had diabetes?
+                # 'DIABAGE3',     # How old were you when you were told you had diabetes?
                 'RMVTETH4',     # Not including teeth lost for injury or orthodontics, how many of your permanent teeth have been removed because of tooth decay or gum disease?
                 'MARITAL',      # Are you: (marital status)
                 'EMPLOY1',      # Are you currently…?
-                'INCOME2',      # Is your annual household income from all sources: (If respondent refuses at any income level, code ´Refused.´)
-                'WEIGHT2',      # About how much do you weigh without shoes? (If respondent answers in metrics, put a 9 in the first column)[Round fractions up.]
-                'HEIGHT3',      # About how tall are you without shoes? (If respondent answers in metrics, put a 9 in the first column)[Round fractions down.]
-                'FLSHTMY3',     # During what month and year did you receive your most recent flu vaccine that was sprayed in your nose or flu shot injected into your arm?
+                # 'INCOME2',      # Is your annual household income from all sources: (If respondent refuses at any income level, code ´Refused.´)
+                # 'WEIGHT2',      # About how much do you weigh without shoes? (If respondent answers in metrics, put a 9 in the first column)[Round fractions up.]
+                # 'HEIGHT3',      # About how tall are you without shoes? (If respondent answers in metrics, put a 9 in the first column)[Round fractions down.]
+                # 'FLSHTMY3',     # During what month and year did you receive your most recent flu vaccine that was sprayed in your nose or flu shot injected into your arm?
                 'FALL12MN',     # In the past 12 months, how many times have you fallen?
-                'COLNTEST',     # How long has it been since you had this test?
-                'HIVTSTD3',     # Not including blood donations, in what month and year was your last H.I.V. test? (If response is before January 1985, code ´777777´.)
-                'CNCRAGE',      # At what age were you told that you had cancer? (If Response = 2 (Two) or 3 (Three or more), ask: “At what age was your first diagnosis of cancer?”)
-                '_STSTR',       # Sample Design Stratification Variable (Prior to 2011: _STSTR is a five digit number that combines the values for _STATE (first two characters), _GEOSTR (third and fourth character), and _DENSTR2 (final character).)
+                # 'COLNTEST',     # How long has it been since you had this test?
+                # 'HIVTSTD3',     # Not including blood donations, in what month and year was your last H.I.V. test? (If response is before January 1985, code ´777777´.)
+                # 'CNCRAGE',      # At what age were you told that you had cancer? (If Response = 2 (Two) or 3 (Three or more), ask: “At what age was your first diagnosis of cancer?”)
+                # '_STSTR',       # Sample Design Stratification Variable (Prior to 2011: _STSTR is a five digit number that combines the values for _STATE (first two characters), _GEOSTR (third and fourth character), and _DENSTR2 (final character).)
                 # '_STRWT',       # Stratum weight
-                '_WT2RAKE',     # Design weight used in raking (Stratum weight (_STRWT) multiplied by the raw weighting factor (_RAWRAKE).)
-                '_DUALCOR',     # Dual phone use correction factor
+                # '_WT2RAKE',     # Design weight used in raking (Stratum weight (_STRWT) multiplied by the raw weighting factor (_RAWRAKE).)
+                # '_DUALCOR',     # Dual phone use correction factor
                 # '_LLCPWT2',     # Truncated design weight used in adult combined land line and cell phone raking
                 # '_LLCPWT',      # Truncated design weight used in adult combined land line and cell phone raking
                 # '_MICHD',       # Respondents that have ever reported having coronary heart disease (CHD) or myocardial infarction (MI)
-                '_AGEG5YR',     # Fourteen-level age category
+                # '_AGEG5YR',     # Fourteen-level age category
                 '_AGE80',       # Imputed Age value collapsed above 80
                 'HTIN4',        # Reported height in inches
                 # 'HTM4',         # Reported height in meters
@@ -139,6 +139,31 @@ RFE_features = ['_STATE',       # State FIPS Code
                 '_BMI5'         # Body Mass Index (BMI)
                 '_INCOMG'   ,   # Income categories
                 '_DRNKWK1'  ]   # Calculated total number of alcoholic beverages consumed per week
+
+
+add_features = [
+		'DIABETE4',         # (Ever told) (you had) diabetes?
+		'CHCKDNY2',  # Not including kidney stones, bladder infection or incontinence, were you ever told you had kidney disease?  1 yes 2 no
+		'FLUSHOT7',         # During the past 12 months, have you had either flu vaccine that was sprayed in your nose or flu shot injected into your arm?
+		'_CRCREC1',     # fully met the USPSTF recommendations for rectal cancer screening 1 yes, 2 yes but not within time, 3 never
+		'_AIDTST4',  # ever been tested for HIV
+		'CHCSCNCR',  # (Ever told) (you had) skin cancer? 1 yes 2 no
+		'CHCOCNCR',  # (Ever told) (you had) any other types of cancer? 1 yes 2 no
+		'CHCCOPD2',  # (Ever told) (you had) chronic obstructive pulmonary disease, C.O.P.D., emphysema or chronic bronchitis? 1 yes 2 no
+		'_RACE',  # 1 White only, nonHispanic, 2 Black only, nonHispanic, 3 American Indian or Alaskan Native only,Non-Hispanic 4 Asian only, nonHispanic  5 Native Hawaiian or other Pacific Islander only, Non-Hispanic 6 Other race only, nonHispanic 7 Multiracial, nonHispanic 8 Hispanic Respondents who reported they are of Hispanic origin. ( _HISPANC=1) 9 Don’t know/ Not sure/ Refused
+		'_EDUCAG',  # level of education completed 1 no grad high school, 2 high school, 3 some college, 4 graduated college, 9 don't know
+		'SEXVAR',  # Sex of Respondent 1 MALE, 2 FEMALE
+		'_TOTINDA',  # Exercise 1 Had physical activity or exercise 2 No physical activity or exercise in last 30 days 9 Don’t know/ Refused/ Missing
+		'_ASTHMS1',  # asthma? 1 current 2 former 3 never
+		'_DRDXAR2',  # ever arthritis? 1 Diagnosed with arthritis 2 Not diagnosed with arthritis
+		'_DENVST3',  # dentist in past year? 1 yes 2 no 9 don't know
+		'_SMOKER3',  # four-level smoker status: everyday smoker, someday smoker, former smoker, non-smoker
+		'PERSDOC2',  # personal doctor yes = 1, more = 2, no = 3 Do you have one person you think of as your personal doctor or health care provider? (If ´No´ ask ´Is there more than one or is there no person who you think of as your personal doctor or health care provider?´.)
+]
+
+stroke_features = RFE_features + add_features
+len(stroke_features)
+
 
 
 

@@ -18,6 +18,15 @@ Accuracy score: 0.736907152788506
    macro avg       0.74      0.74      0.74      6473
 weighted avg       0.74      0.74      0.74      6473
 
+With Random Under Sampling_2:
+Accuracy score: 0.7350233891655349
+              precision    recall  f1-score   support
+         0.0       0.77      0.69      0.73      3392
+         1.0       0.71      0.78      0.74      3235
+    accuracy                           0.74      6627
+   macro avg       0.74      0.74      0.73      6627
+weighted avg       0.74      0.74      0.73      6627
+
 
 
 With NearMiss-1:

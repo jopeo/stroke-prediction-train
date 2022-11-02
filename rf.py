@@ -18,7 +18,7 @@ from imblearn.under_sampling import ClusterCentroids, RandomUnderSampler, NearMi
 
 
 raw_file = "raw.h5"
-cleaned_file = "stroke_cleaned.h5"
+cleaned_file = "stroke_cleaned_2.h5"
 model_name = "stroke_model_RUS_2.joblib"
 outcome = "CVDSTRK3"    # (Ever told) (you had) a stroke.
 
@@ -98,25 +98,31 @@ random_state = 1
 #                 'SLEPTIM1',  # how many hours of sleep do you get in a 24-hour period?
 #                 ]
 
-stroke_features = [
+features = [
 		'_STATE',       # State FIPS Code
+		'_AGE80',  # Imputed Age value collapsed above 80
+		'SEXVAR',  # Sex of Respondent 1 MALE, 2 FEMALE
+		'_RACE',  # 1 White only, nonHispanic, 2 Black only, nonHispanic, 3 American Indian or Alaskan Native only,Non-Hispanic 4 Asian only, nonHispanic  5 Native Hawaiian or other Pacific Islander only, Non-Hispanic 6 Other race only, nonHispanic 7 Multiracial, nonHispanic 8 Hispanic Respondents who reported they are of Hispanic origin. ( _HISPANC=1) 9 Don’t know/ Not sure/ Refused
+		# 'HTIN4',  # Reported height in inches
+		# 'WTKG3',  # Reported weight in kilograms
+		'_BMI5',  # Body Mass Index (BMI)
+		'_TOTINDA',  # Exercise 1 Had physical activity or exercise 2 No physical activity or exercise in last 30 days 9 Don’t know/ Refused/ Missing
+		'_EDUCAG',  # level of education completed 1 no grad high school, 2 high school, 3 some college, 4 graduated college, 9 don't know
 		'GENHLTH',      # Would you say that in general your health is:
 		'PHYSHLTH',     # Now thinking about your physical health, which includes physical illness and injury, for how many days during the past 30 days was your physical health not good?
 		'MENTHLTH',     # Now thinking about your mental health, which includes stress, depression, and problems with emotions, for how many days during the past 30 days was your mental health not good?
 		'POORHLTH',     # During the past 30 days, for about how many days did poor physical or mental health keep you from doing your usual activities, such as self-care, work, or recreation?
 		'SLEPTIM1',     # On average, how many hours of sleep do you get in a 24-hour period?
-		'CVDINFR4',     # (Ever told) you had a heart attack, also called a myocardial infarction?
-		'CVDCRHD4',     # (Ever told) (you had) angina or coronary heart disease?
-		'RMVTETH4',     # Not including teeth lost for injury or orthodontics, how many of your permanent teeth have been removed because of tooth decay or gum disease?
-		'MARITAL',      # Are you: (marital status)
-		'EMPLOY1',      # Are you currently…?
+		'MARITAL',  # Are you: (marital status)
+		'EMPLOY1',  # Are you currently…?
+		'_INCOMG',  # Income categories
+		'_DRNKWK1',  # Calculated total number of alcoholic beverages consumed per week
+		'_SMOKER3',  # four-level smoker status: everyday smoker, someday smoker, former smoker, non-smoker
+		'PERSDOC2',  # personal doctor yes = 1, more = 2, no = 3 Do you have one person you think of as your personal doctor or health care provider? (If ´No´ ask ´Is there more than one or is there no person who you think of as your personal doctor or health care provider?´.)
+		'CVDINFR4',  # (Ever told) you had a heart attack, also called a myocardial infarction?
+		'CVDCRHD4',  # (Ever told) (you had) angina or coronary heart disease?
+		'RMVTETH4',  # Not including teeth lost for injury or orthodontics, how many of your permanent teeth have been removed because of tooth decay or gum disease?
 		'FALL12MN',     # In the past 12 months, how many times have you fallen?
-		'_AGE80',       # Imputed Age value collapsed above 80
-		'HTIN4',        # Reported height in inches
-		'WTKG3',        # Reported weight in kilograms
-		'_BMI5',        # Body Mass Index (BMI)
-		'_INCOMG',      # Income categories
-		'_DRNKWK1',     # Calculated total number of alcoholic beverages consumed per week
 		'DIABETE4',     # (Ever told) (you had) diabetes?
 		'CHCKDNY2',     # Not including kidney stones, bladder infection or incontinence, were you ever told you had kidney disease?  1 yes 2 no
 		'FLUSHOT7',     # During the past 12 months, have you had either flu vaccine that was sprayed in your nose or flu shot injected into your arm?
@@ -125,17 +131,11 @@ stroke_features = [
 		'CHCSCNCR',     # (Ever told) (you had) skin cancer? 1 yes 2 no
 		'CHCOCNCR',     # (Ever told) (you had) any other types of cancer? 1 yes 2 no
 		'CHCCOPD2',     # (Ever told) (you had) chronic obstructive pulmonary disease, C.O.P.D., emphysema or chronic bronchitis? 1 yes 2 no
-		'_RACE',        # 1 White only, nonHispanic, 2 Black only, nonHispanic, 3 American Indian or Alaskan Native only,Non-Hispanic 4 Asian only, nonHispanic  5 Native Hawaiian or other Pacific Islander only, Non-Hispanic 6 Other race only, nonHispanic 7 Multiracial, nonHispanic 8 Hispanic Respondents who reported they are of Hispanic origin. ( _HISPANC=1) 9 Don’t know/ Not sure/ Refused
-		'_EDUCAG',      # level of education completed 1 no grad high school, 2 high school, 3 some college, 4 graduated college, 9 don't know
-		'SEXVAR',       # Sex of Respondent 1 MALE, 2 FEMALE
-		'_TOTINDA',     # Exercise 1 Had physical activity or exercise 2 No physical activity or exercise in last 30 days 9 Don’t know/ Refused/ Missing
 		'_ASTHMS1',     # asthma? 1 current 2 former 3 never
 		'_DRDXAR2',     # ever arthritis? 1 Diagnosed with arthritis 2 Not diagnosed with arthritis
 		'_DENVST3',     # dentist in past year? 1 yes 2 no 9 don't know
-		'_SMOKER3',     # four-level smoker status: everyday smoker, someday smoker, former smoker, non-smoker
-		'PERSDOC2',     # personal doctor yes = 1, more = 2, no = 3 Do you have one person you think of as your personal doctor or health care provider? (If ´No´ ask ´Is there more than one or is there no person who you think of as your personal doctor or health care provider?´.)
 ]
-len(stroke_features)
+len(features)
 
 RFE_features = ['_STATE',       # State FIPS Code
                 # 'FMONTH',       # File Month
@@ -201,64 +201,48 @@ add_features = [
 
 
 def load_data(name):
-	data_1 = pd.read_sas('./source/' + name)
+	# data_1 = pd.read_sas('./source/' + name)
+	data_1 = pd.read_hdf(raw_file)  # to read cleaned data
 	data_2 = data_1.copy()
 	return data_1, data_2
 
 
 def clean_data(data):
-	data = data.dropna(subset=["_MICHD"], axis=0)
+	data = data.dropna(subset=[outcome], axis=0)
 	data = data[data.DISPCODE != 1200]  # == 1200    final disposition (1100 completed or not 1200)
-	data._RFHLTH = data._RFHLTH.replace(9, int(data._RFHLTH.mode()))
-	data._PHYS14D = data._PHYS14D.replace(9, int(data._PHYS14D.mode()))
-	data._MENT14D = data._MENT14D.replace(9, int(data._MENT14D.mode()))
-	data._HCVU651 = data._HCVU651.replace(9, int(data._HCVU651.mode()))
-	data._TOTINDA = data._TOTINDA.replace(9, int(data._TOTINDA.mode()))
-	data._ASTHMS1 = data._ASTHMS1.replace(9, int(data._ASTHMS1.mode()))
-	data._EXTETH3 = data._EXTETH3.replace(9, int(data._EXTETH3.mode()))
-	data._DENVST3 = data._DENVST3.replace(9, int(data._DENVST3.mode()))
-	data._RACE = data._RACE.replace(9, int(data._RACE.mode()))
-	data._CHLDCNT = data._CHLDCNT.replace(9, int(data._CHLDCNT.mode()))
-	data._EDUCAG = data._EDUCAG.replace(9, int(data._EDUCAG.mode()))
-	data._INCOMG = data._INCOMG.replace(9, int(data._INCOMG.mode()))
-	data._SMOKER3 = data._SMOKER3.replace(9, int(data._SMOKER3.mode()))
-	data.DRNKANY5 = data.DRNKANY5.replace(9, int(data.DRNKANY5.mode()))
-	data.DRNKANY5 = data.DRNKANY5.replace(7, int(data.DRNKANY5.mode()))
-	data._RFBING5 = data._RFBING5.replace(9, int(data._RFBING5.mode()))
-	data._DRNKWK1 = data._DRNKWK1.replace(99900, int(data._DRNKWK1.mode()))
-	data._RFDRHV7 = data._RFDRHV7.replace(9, int(data._RFDRHV7.mode()))
-	data._PNEUMO3 = data._PNEUMO3.replace(9, int(data._PNEUMO3.mode()))
-	data._RFSEAT3 = data._RFSEAT3.replace(9, int(data._RFSEAT3.mode()))
-	data._DRNKDRV = data._DRNKDRV.replace(9, int(data._DRNKDRV.mode()))
-	data._RFMAM22 = data._RFMAM22.replace(9, int(data._RFMAM22.mode()))
-	data._FLSHOT7 = data._FLSHOT7.replace(9, int(data._FLSHOT7.mode()))
-	data._RFPAP35 = data._RFPAP35.replace(9, int(data._RFPAP35.mode()))
-	data._RFPSA23 = data._RFPSA23.replace(9, int(data._RFPSA23.mode()))
-	data._AIDTST4 = data._AIDTST4.replace(9, int(data._AIDTST4.mode()))
-	data.PERSDOC2 = data.PERSDOC2.replace(9, int(data.PERSDOC2.mode()))
-	data.PERSDOC2 = data.PERSDOC2.replace(7, int(data.PERSDOC2.mode()))
-	data.SLEPTIM1 = data.SLEPTIM1.replace(77, int(data.SLEPTIM1.mode()))
-	data.SLEPTIM1 = data.SLEPTIM1.replace(99, int(data.SLEPTIM1.mode()))
-	data.CHCSCNCR = data.CHCSCNCR.replace(7, int(data.CHCSCNCR.mode()))
-	data.CHCSCNCR = data.CHCSCNCR.replace(9, int(data.CHCSCNCR.mode()))
-	data.CHCOCNCR = data.CHCOCNCR.replace(7, int(data.CHCOCNCR.mode()))
-	data.CHCOCNCR = data.CHCOCNCR.replace(9, int(data.CHCOCNCR.mode()))
-	data.CHCCOPD2 = data.CHCCOPD2.replace(7, int(data.CHCCOPD2.mode()))
-	data.CHCCOPD2 = data.CHCCOPD2.replace(9, int(data.CHCCOPD2.mode()))
-	data.ADDEPEV3 = data.ADDEPEV3.replace(7, int(data.ADDEPEV3.mode()))
-	data.ADDEPEV3 = data.ADDEPEV3.replace(9, int(data.ADDEPEV3.mode()))
-	data.CHCKDNY2 = data.CHCKDNY2.replace(7, int(data.CHCKDNY2.mode()))
-	data.CHCKDNY2 = data.CHCKDNY2.replace(9, int(data.CHCKDNY2.mode()))
+	
+	data = data.drop([i for i in data.columns if i in data.columns and i not in features and i not in outcome], axis=1)
+	
 	data.DIABETE4 = data.DIABETE4.replace(2, 1)
 	data.DIABETE4 = data.DIABETE4.replace(4, 3)
 	data.DIABETE4 = data.DIABETE4.replace(3, 2)
-	data.DIABETE4 = data.DIABETE4.replace(7, int(data.DIABETE4.mode()))
-	data.DIABETE4 = data.DIABETE4.replace(9, int(data.DIABETE4.mode()))
-	data.MARITAL = data.MARITAL.replace(9, int(data.MARITAL.mode()))
-	data.CVDSTRK3 = data.CVDSTRK3.replace(9, int(data.CVDSTRK3.mode()))
-	data.CVDSTRK3 = data.CVDSTRK3.replace(7, int(data.CVDSTRK3.mode()))
-	data = data[data.QSTLANG < 3]  # responded english or spanish to language (only 1 respondent said other)
-	return data
+
+	for feat in [i for i in features + [outcome] if i in features + [outcome] and i not in ['_INCOMG', '_RACE']]:
+		to_replace = [7, 9, 77, 99, 99900]
+		for num in to_replace:
+			if num in data[feat].values:
+				data[feat] = data[feat].replace(num, int(data[feat].mode()))
+
+		to_zero = [8, 88]
+		for z in to_zero:
+			if z in data[feat].values:
+				data[feat] = data[feat].replace(z, 0)
+				
+		print(data[feat].value_counts())
+	
+	X = data.drop([outcome], axis=1)
+	
+	y = abs(data[outcome] - 2)
+	y.value_counts()
+	
+
+	return X, y
+
+
+def imp_mode(data):
+	imp = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
+	X = pd.DataFrame(imp.fit_transform(data), columns=data.columns)
+	return X
 
 
 def preprocess(inputs):
@@ -316,70 +300,39 @@ def process(prediction_data):
 
 
 if __name__ ==  "__main__":
-	data = pd.read_hdf(raw_file)  # to read cleaned data
+	data_o, data = load_data(raw_file)
 	data.shape
 
-	data = clean_data(data)
-	data.shape
-	
-	# data.CVDSTRK3.unique()
-	# data._MICHD.describe()
-	# cols = data.columns
-	# print(cols)
-	# data.describe()
-	# data.head()
-	# data.columns
-	
-	X = data.drop([i for i in data.columns if i in data.columns and i not in features_cat and i not in features_num and i not in [outcome]], axis=1)
+	X, y = clean_data(data)
 	X.shape
+	y.value_counts()
 	
-	y = abs(data.CVDSTRK3 - 2)
-	y.head()
-	# y.describe()
-	# y.shape
-	# len([i for i in y if i == 1])
-	# y.value_counts()
-	# y.value_counts(1)
-	X = X.drop([outcome], axis=1)
-	
-	
-	X.shape
-	X.head()
-	
-	X_mode = X.mode()
-	X_mode
-	X_mode.shape
-	imp = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
-	X = pd.DataFrame(imp.fit_transform(X), columns=X.columns)
-	X.shape
-	X.head()
+	X = imp_mode(X)
 	X.isnull().values.any()
-	X
-	
-	
+	X.shape
+
 	# X.to_hdf(cleaned_file, "X", complevel=2)  # to save cleaned data
 	# X = pd.read_hdf(cleaned_file)  # to read cleaned data
-	X.shape
 	
-	# rus = RandomUnderSampler(random_state=random_state)
-	# X_rus, y_rus = rus.fit_resample(X, y)
-	# y_rus.value_counts()
-	# X_rus.shape
-	# y.value_counts()
+	rus = RandomUnderSampler(random_state=random_state)
+	X_rus, y_rus = rus.fit_resample(X, y)
+	y_rus.value_counts()
+	X_rus.shape
+	y.value_counts()
 	
 	# cc = ClusterCentroids(random_state=random_state)
 	# X_cc, y_cc = cc.fit_resample(X, y)
 	# y_cc.value_counts()
 	# X_cc.shape
 	
-	nm = NearMiss(version=3)
-	X_nm, y_nm = nm.fit_resample(X, y)
-	y_nm.value_counts()
-	X_nm.shape
+	# nm = NearMiss(version=3)
+	# X_nm, y_nm = nm.fit_resample(X, y)
+	# y_nm.value_counts()
+	# X_nm.shape
 	
 	
-	train_X, val_X, train_y, val_y = train_test_split(X_nm, y_nm,  # X_rus, y_rus,  # X, y, # X_cc, y_cc,  #
-	                                                  random_state=random_state)  # ,, stratify=y)  #
+	train_X, val_X, train_y, val_y = train_test_split(X_rus, y_rus,  # X, y, # X_cc, y_cc,  # X_nm, y_nm,  #
+	                                                  random_state=random_state)  # , , stratify=y)  #
 	train_X.shape
 	train_y.describe()
 	train_y.value_counts()
@@ -392,7 +345,7 @@ if __name__ ==  "__main__":
 	# X_cats.head()
 	
 	rf = RandomForestClassifier(random_state=random_state)
-	rf.fit(X_nm, y_nm)  # train_X, train_y)    # X, y)  # X_rus, y_rus) #
+	rf.fit(train_X, train_y)    # X, y)  # X_rus, y_rus)  # X_nm, y_nm)  #
 	
 	dump(rf, model_name, compress=3)
 
@@ -406,13 +359,14 @@ if __name__ ==  "__main__":
 	matrix = matrix.astype('float') / matrix.sum(axis=1)[:, np.newaxis]
 	val_X.value_counts()
 	val_y.value_counts()
+	pd.DataFrame(y_predictions).value_counts()
 
 	
-	plt.figure(figsize=(8, 7))
+	plt.figure(figsize=(12,9))
 	sns.set(font_scale=1.4)
 	sns.heatmap(matrix, annot=True, annot_kws={
 			'size': 10},
-	            cmap=plt.cm.Greens, linewidths=0.2)
+	            cmap=plt.cm.Blues, linewidths=0.2)     # plt.cm.Greens plt.cm.Blues  BuPu
 	class_names = ["No stroke", "Stroke"]
 	tick_marks = np.arange(len(class_names))
 	tick_marks2 = tick_marks + 0.5
@@ -420,7 +374,7 @@ if __name__ ==  "__main__":
 	plt.yticks(tick_marks2, class_names, rotation=0)
 	plt.xlabel('Predicted label')
 	plt.ylabel('True label')
-	plt.title('Confusion Matrix for Random Forest Model - NearMiss-3')
+	plt.title('Confusion Matrix for Random Forest Model - RUS_2')
 	plt.show()
 	
 	print(classification_report(val_y, y_predictions))
@@ -484,104 +438,5 @@ if __name__ ==  "__main__":
 	accuracy_score(val_y, preds)
 	
 	print(mean_absolute_error(val_y, predictions))
-	
-	
-	
-	
-	# categoricals = data.select_dtypes(include=[np.object])
-	# categoricals.columns
-	# numericals = data.select_dtypes(include=[np.number])
-	# numericals.columns
-	#
-	# sns.pairplot(data, hue="HeartDisease")
-	# sns.countplot(x="HeartDisease", data=data)
-	#
-	# data['HeartDisease'] = data['HeartDisease'].apply(lambda x: 0 if x == 'No' else 1)
-	#
-	# plt.figure(figsize=(15, 8))
-	# ax = sns.kdeplot(data["BMI"][data.HeartDisease == 1], shade=True)  # color="darkturquoise",
-	# sns.kdeplot(data["BMI"][data.HeartDisease == 0], shade=True)  # color="lightcoral",
-	# plt.legend(['HeartDisease', 'non-HeartDisease'])
-	# plt.title('Density Plot of HeartDisease for BMI')
-	# ax.set(xlabel='BMI')
-	# plt.xlim(10, 50)
-	# plt.show()
-	#
-	# plt.figure(figsize=(15, 8))
-	# ax = sns.kdeplot(data["SleepTime"][data.HeartDisease == 1], shade=True)
-	# sns.kdeplot(data["SleepTime"][data.HeartDisease == 0], shade=True)
-	# plt.legend(['HeartDisease', 'non-HeartDisease'])
-	# plt.title('Density Plot of HeartDisease for SleepTime')
-	# ax.set(xlabel='SleepTime')
-	# plt.xlim(2, 15)
-	# plt.show()
-	#
-	# plt.figure(figsize=(5, 3))
-	# sns.barplot('AgeCategory', 'HeartDisease', data=data, )
-	# plt.xticks(fontsize=12, rotation=90)
-	# plt.yticks(fontsize=12)
-	# plt.title('Density Plot of HeartDisease for Age')
-	# plt.xlabel('AgeCategory', fontsize=11)
-	# plt.ylabel('HeartDisease', fontsize=11)
-	# plt.show()
-	#
-	# n = 1
-	# plt.figure(figsize=(15, 25))
-	# for feature in numericals.columns:
-	# 	plt.subplot(6, 3, n)
-	# 	sns.displot(data[feature], kde=True)
-	# 	plt.xlabel(feature)
-	# 	plt.ylabel("Count")
-	# 	n += 1
-	#
-	# for column in data.columns:
-	# 	if data[column].dtypes == "object":
-	# 		data[column] = data[column].fillna(data[column].mode().iloc[0])
-	# 		uniques = len(data[column].unique())
-	#
-	# n = 1
-	# plt.figure(figsize=(15, 25))
-	# for feature in categoricals.columns:
-	# 	plt.subplot(6, 3, n)
-	# 	sns.countplot(x=feature, hue="HeartDisease", data=data)
-	# 	n += 1
-	#
-	# n = 1
-	# plt.figure(figsize=(15, 25))
-	# for col in categoricals:
-	# 	plt.subplot(6, 3, n)
-	# 	sns.countplot(x='Sex', hue=categoricals[col], data=data)
-	# 	n += 1
-	#
-	# n = 1
-	# plt.figure(figsize=(15, 25))
-	# for feature in numericals:
-	# 	plt.subplot(6, 3, n)
-	# 	sns.boxplot(y=data[feature], x=data['AlcoholDrinking'])
-	# 	n += 1
-	#
-	# n = 1
-	# plt.figure(figsize=(15, 25))
-	# for feature in numericals:
-	# 	plt.subplot(6, 3, n)
-	# 	sns.boxplot(y=data[feature], x=data['Diabetic'])
-	# 	n += 1
-	#
-	# n = 1
-	# plt.figure(figsize=(15, 25))
-	# for feature in numericals:
-	# 	plt.subplot(6, 3, n)
-	# 	sns.boxplot(y=data[feature], x=data['PhysicalActivity'])
-	# 	n += 1
-	#
-	# n = 1
-	# plt.figure(figsize=(15, 25))
-	# for feature in numericals:
-	# 	plt.subplot(6, 3, n)
-	# 	sns.boxplot(y=data[feature], x=data['Race'])
-	# 	n += 1
-	
-	
-	
 	
 	pass

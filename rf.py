@@ -19,12 +19,12 @@ from imblearn.under_sampling import ClusterCentroids, RandomUnderSampler, NearMi
 
 raw_file = "raw.h5"
 cleaned_file = "stroke_cleaned.h5"
-model_name = "stroke_model_nm-3.joblib"
+model_name = "stroke_model_RUS_2.joblib"
 outcome = "CVDSTRK3"    # (Ever told) (you had) a stroke.
 
 # todo: check hyperparams:
 random_state = 1
-n_estimators = [50, 100, 250, 500]    #, 300, 500, 750, 800, 1200]
+# n_estimators = [50, 100, 250, 500]    #, 300, 500, 750, 800, 1200]
 # criterion = 'gini'
 # max_depth = None
 # max_features = 'sqrt'
@@ -36,67 +36,67 @@ n_estimators = [50, 100, 250, 500]    #, 300, 500, 750, 800, 1200]
 # max_samples =
 # Class_weight =
 
-param_grid = {"bootstrap": [True],
-              "max_depth": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, None],
-              "max_features": ["auto", "sqrt"],
-              "min_samples_leaf": [1, 2, 4],
-              "min_samples_split": [2, 5, 10],
-              "n_estimators": [200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000]
-              }
+# param_grid = {"bootstrap": [True],
+#               "max_depth": [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, None],
+#               "max_features": ["auto", "sqrt"],
+#               "min_samples_leaf": [1, 2, 4],
+#               "min_samples_split": [2, 5, 10],
+#               "n_estimators": [200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000]
+#               }
 
-features_cat = ['_STATE',       # geographical state]
-                'SEXVAR',       # Sex of Respondent 1 MALE, 2 FEMALE
-                '_RFHLTH',      # Health Status  1 Good or Better Health 2 Fair or Poor Health
-                                    # 9 Don’t know/ Not Sure Or Refused/ Missing
-                '_PHYS14D',     # Healthy Days 1 Zero days when physical health not good
-                                    #  2 1-13 days when physical health not good
-                                    # 3 14+ days when physical health not good
-                                    # 9 Don’t know/ Refused/Missing
-                '_MENT14D',     # SAME AS PHYS
-                '_HCVU651',     # Health Care Access  1 Have health care coverage 2 Do not have health care coverage 9 Don’t know/ Not Sure, Refused or Missing
-                '_TOTINDA',     # Exercise 1 Had physical activity or exercise 2 No physical activity or exercise in last 30 days 9 Don’t know/ Refused/ Missing
-                '_ASTHMS1',     # asthma? 1 current 2 former 3 never
-                '_DRDXAR2',     # ever arthritis? 1 Diagnosed with arthritis 2 Not diagnosed with arthritis
-                '_EXTETH3',     # ever had teeth extracted? 1 no 2 yes 9 dont know
-                '_DENVST3',     # dentist in past year? 1 yes 2 no 9 don't know
-                '_RACE',        # 1 White only, nonHispanic, 2 Black only, nonHispanic, 3 American Indian or Alaskan Native only,Non-Hispanic 4 Asian only, nonHispanic  5 Native Hawaiian or other Pacific Islander only, Non-Hispanic 6 Other race only, nonHispanic 7 Multiracial, nonHispanic 8 Hispanic Respondents who reported they are of Hispanic origin. ( _HISPANC=1) 9 Don’t know/ Not sure/ Refused
-                '_EDUCAG',      # level of education completed 1 no grad high school, 2 high school, 3 some college, 4 graduated college, 9 don't know
-                '_INCOMG',      # Income categories (1 Less than $15,000, 2 $15,000 to less than $25,000, 3 $25,000 to less than $35,000, 4 $35,000 to less than $50,000, 5 $50,000 or more, 9 dont know
-                '_METSTAT',     # metropolitan status 1 yes, 2 no
-                '_URBSTAT',     # urban rural status 1 urban 2 rural
-                '_SMOKER3',     # four-level smoker status: everyday smoker, someday smoker, former smoker, non-smoker
-                'DRNKANY5',     # had at least one drink of alcohol in the past 30 days
-                '_RFBING5',     # binge drinkers (males having five or more drinks on one occasion, females having four or more drinks on one occasion 1 no 2 yes
-                '_RFDRHV7',     # heavy drinkers 14 drinks per week or less, or Female Respondents who reported having 7 drinks per week or less 1 no 2 yes
-                '_PNEUMO3',     # ever had a pneumonia vaccination
-                '_RFSEAT3',     # always wear seat belts 1 yes 2 no
-                '_DRNKDRV',     # drinking and driving 1 yes 2 no
-                '_RFMAM22',     # mammogram in the past two years 1 yes 2 no
-                '_FLSHOT7',     # flu shot within the past year 1 yes 2 no
-                '_RFPAP35',     # Pap test in the past three years 1 yes 2 no
-                '_RFPSA23',     # PSA test in the past 2 years
-                '_CRCREC1',     # fully met the USPSTF recommendations for rectal cancer screening 1 yes, 2 yes but not within time, 3 never
-                '_AIDTST4',     # ever been tested for HIV
-                'PERSDOC2',     # personal doctor yes = 1, more = 2, no = 3 Do you have one person you think of as your personal doctor or health care provider? (If ´No´ ask ´Is there more than one or is there no person who you think of as your personal doctor or health care provider?´.)
-                'CHCSCNCR',     # (Ever told) (you had) skin cancer? 1 yes 2 no
-                'CHCOCNCR',     # (Ever told) (you had) any other types of cancer? 1 yes 2 no
-                'CHCCOPD2',     #  (Ever told) (you had) chronic obstructive pulmonary disease, C.O.P.D., emphysema or chronic bronchitis? 1 yes 2 no
-                'QSTLANG',     # 1 english 2 spanish
-                'ADDEPEV3',     # (Ever told) (you had) a depressive disorder (including depression, major depression, dysthymia, or minor depression)? 1 yes 2 no
-                'CHCKDNY2',     # Not including kidney stones, bladder infection or incontinence, were you ever told you had kidney disease?  1 yes 2 no
-                'DIABETE4',     # (Ever told) (you had) diabetes? 1 yes 2 no
-                'MARITAL',      #  (marital status) 1 married 2 divorced 3 widowed 4 separated 5 never married 6 member of unmarried couple
-                '_MICHD'        # ever reported having coronary heart disease (CHD) or myocardial infarction (MI) 1 yes 2 no
-                ]
-
-features_num = ['_AGE80',       #  imputed age value collapsed above 80
-                'HTM4',  # height in centimeters
-                'WTKG3',  # weight in kilograms, implied 2 decimal places
-                '_BMI5',  # body mass index
-                '_CHLDCNT',  # number of children in household.
-                '_DRNKWK1',  # total number of alcoholic beverages consumed per week.
-                'SLEPTIM1',  # how many hours of sleep do you get in a 24-hour period?
-                ]
+# features_cat = ['_STATE',       # geographical state]
+#                 'SEXVAR',       # Sex of Respondent 1 MALE, 2 FEMALE
+#                 '_RFHLTH',      # Health Status  1 Good or Better Health 2 Fair or Poor Health
+#                                     # 9 Don’t know/ Not Sure Or Refused/ Missing
+#                 '_PHYS14D',     # Healthy Days 1 Zero days when physical health not good
+#                                     #  2 1-13 days when physical health not good
+#                                     # 3 14+ days when physical health not good
+#                                     # 9 Don’t know/ Refused/Missing
+#                 '_MENT14D',     # SAME AS PHYS
+#                 '_HCVU651',     # Health Care Access  1 Have health care coverage 2 Do not have health care coverage 9 Don’t know/ Not Sure, Refused or Missing
+#                 '_TOTINDA',     # Exercise 1 Had physical activity or exercise 2 No physical activity or exercise in last 30 days 9 Don’t know/ Refused/ Missing
+#                 '_ASTHMS1',     # asthma? 1 current 2 former 3 never
+#                 '_DRDXAR2',     # ever arthritis? 1 Diagnosed with arthritis 2 Not diagnosed with arthritis
+#                 '_EXTETH3',     # ever had teeth extracted? 1 no 2 yes 9 dont know
+#                 '_DENVST3',     # dentist in past year? 1 yes 2 no 9 don't know
+#                 '_RACE',        # 1 White only, nonHispanic, 2 Black only, nonHispanic, 3 American Indian or Alaskan Native only,Non-Hispanic 4 Asian only, nonHispanic  5 Native Hawaiian or other Pacific Islander only, Non-Hispanic 6 Other race only, nonHispanic 7 Multiracial, nonHispanic 8 Hispanic Respondents who reported they are of Hispanic origin. ( _HISPANC=1) 9 Don’t know/ Not sure/ Refused
+#                 '_EDUCAG',      # level of education completed 1 no grad high school, 2 high school, 3 some college, 4 graduated college, 9 don't know
+#                 '_INCOMG',      # Income categories (1 Less than $15,000, 2 $15,000 to less than $25,000, 3 $25,000 to less than $35,000, 4 $35,000 to less than $50,000, 5 $50,000 or more, 9 dont know
+#                 '_METSTAT',     # metropolitan status 1 yes, 2 no
+#                 '_URBSTAT',     # urban rural status 1 urban 2 rural
+#                 '_SMOKER3',     # four-level smoker status: everyday smoker, someday smoker, former smoker, non-smoker
+#                 'DRNKANY5',     # had at least one drink of alcohol in the past 30 days
+#                 '_RFBING5',     # binge drinkers (males having five or more drinks on one occasion, females having four or more drinks on one occasion 1 no 2 yes
+#                 '_RFDRHV7',     # heavy drinkers 14 drinks per week or less, or Female Respondents who reported having 7 drinks per week or less 1 no 2 yes
+#                 '_PNEUMO3',     # ever had a pneumonia vaccination
+#                 '_RFSEAT3',     # always wear seat belts 1 yes 2 no
+#                 '_DRNKDRV',     # drinking and driving 1 yes 2 no
+#                 '_RFMAM22',     # mammogram in the past two years 1 yes 2 no
+#                 '_FLSHOT7',     # flu shot within the past year 1 yes 2 no
+#                 '_RFPAP35',     # Pap test in the past three years 1 yes 2 no
+#                 '_RFPSA23',     # PSA test in the past 2 years
+#                 '_CRCREC1',     # fully met the USPSTF recommendations for rectal cancer screening 1 yes, 2 yes but not within time, 3 never
+#                 '_AIDTST4',     # ever been tested for HIV
+#                 'PERSDOC2',     # personal doctor yes = 1, more = 2, no = 3 Do you have one person you think of as your personal doctor or health care provider? (If ´No´ ask ´Is there more than one or is there no person who you think of as your personal doctor or health care provider?´.)
+#                 'CHCSCNCR',     # (Ever told) (you had) skin cancer? 1 yes 2 no
+#                 'CHCOCNCR',     # (Ever told) (you had) any other types of cancer? 1 yes 2 no
+#                 'CHCCOPD2',     #  (Ever told) (you had) chronic obstructive pulmonary disease, C.O.P.D., emphysema or chronic bronchitis? 1 yes 2 no
+#                 'QSTLANG',     # 1 english 2 spanish
+#                 'ADDEPEV3',     # (Ever told) (you had) a depressive disorder (including depression, major depression, dysthymia, or minor depression)? 1 yes 2 no
+#                 'CHCKDNY2',     # Not including kidney stones, bladder infection or incontinence, were you ever told you had kidney disease?  1 yes 2 no
+#                 'DIABETE4',     # (Ever told) (you had) diabetes? 1 yes 2 no
+#                 'MARITAL',      #  (marital status) 1 married 2 divorced 3 widowed 4 separated 5 never married 6 member of unmarried couple
+#                 '_MICHD'        # ever reported having coronary heart disease (CHD) or myocardial infarction (MI) 1 yes 2 no
+#                 ]
+#
+# features_num = ['_AGE80',       #  imputed age value collapsed above 80
+#                 'HTM4',  # height in centimeters
+#                 'WTKG3',  # weight in kilograms, implied 2 decimal places
+#                 '_BMI5',  # body mass index
+#                 '_CHLDCNT',  # number of children in household.
+#                 '_DRNKWK1',  # total number of alcoholic beverages consumed per week.
+#                 'SLEPTIM1',  # how many hours of sleep do you get in a 24-hour period?
+#                 ]
 
 stroke_features = [
 		'_STATE',       # State FIPS Code
@@ -114,27 +114,28 @@ stroke_features = [
 		'_AGE80',       # Imputed Age value collapsed above 80
 		'HTIN4',        # Reported height in inches
 		'WTKG3',        # Reported weight in kilograms
-		'_BMI5'         # Body Mass Index (BMI)
+		'_BMI5',        # Body Mass Index (BMI)
 		'_INCOMG',      # Income categories
-		'_DRNKWK1',      # Calculated total number of alcoholic beverages consumed per week
-		'DIABETE4',  # (Ever told) (you had) diabetes?
-		'CHCKDNY2',  # Not including kidney stones, bladder infection or incontinence, were you ever told you had kidney disease?  1 yes 2 no
-		'FLUSHOT7',  # During the past 12 months, have you had either flu vaccine that was sprayed in your nose or flu shot injected into your arm?
-		'_CRCREC1',  # fully met the USPSTF recommendations for rectal cancer screening 1 yes, 2 yes but not within time, 3 never
-		'_AIDTST4',  # ever been tested for HIV
-		'CHCSCNCR',  # (Ever told) (you had) skin cancer? 1 yes 2 no
-		'CHCOCNCR',  # (Ever told) (you had) any other types of cancer? 1 yes 2 no
-		'CHCCOPD2',  # (Ever told) (you had) chronic obstructive pulmonary disease, C.O.P.D., emphysema or chronic bronchitis? 1 yes 2 no
-		'_RACE',  # 1 White only, nonHispanic, 2 Black only, nonHispanic, 3 American Indian or Alaskan Native only,Non-Hispanic 4 Asian only, nonHispanic  5 Native Hawaiian or other Pacific Islander only, Non-Hispanic 6 Other race only, nonHispanic 7 Multiracial, nonHispanic 8 Hispanic Respondents who reported they are of Hispanic origin. ( _HISPANC=1) 9 Don’t know/ Not sure/ Refused
-		'_EDUCAG',  # level of education completed 1 no grad high school, 2 high school, 3 some college, 4 graduated college, 9 don't know
-		'SEXVAR',  # Sex of Respondent 1 MALE, 2 FEMALE
-		'_TOTINDA',  # Exercise 1 Had physical activity or exercise 2 No physical activity or exercise in last 30 days 9 Don’t know/ Refused/ Missing
-		'_ASTHMS1',  # asthma? 1 current 2 former 3 never
-		'_DRDXAR2',  # ever arthritis? 1 Diagnosed with arthritis 2 Not diagnosed with arthritis
-		'_DENVST3',  # dentist in past year? 1 yes 2 no 9 don't know
-		'_SMOKER3',  # four-level smoker status: everyday smoker, someday smoker, former smoker, non-smoker
-		'PERSDOC2',  # personal doctor yes = 1, more = 2, no = 3 Do you have one person you think of as your personal doctor or health care provider? (If ´No´ ask ´Is there more than one or is there no person who you think of as your personal doctor or health care provider?´.)
+		'_DRNKWK1',     # Calculated total number of alcoholic beverages consumed per week
+		'DIABETE4',     # (Ever told) (you had) diabetes?
+		'CHCKDNY2',     # Not including kidney stones, bladder infection or incontinence, were you ever told you had kidney disease?  1 yes 2 no
+		'FLUSHOT7',     # During the past 12 months, have you had either flu vaccine that was sprayed in your nose or flu shot injected into your arm?
+		'_CRCREC1',     # fully met the USPSTF recommendations for rectal cancer screening 1 yes, 2 yes but not within time, 3 never
+		'_AIDTST4',     # ever been tested for HIV
+		'CHCSCNCR',     # (Ever told) (you had) skin cancer? 1 yes 2 no
+		'CHCOCNCR',     # (Ever told) (you had) any other types of cancer? 1 yes 2 no
+		'CHCCOPD2',     # (Ever told) (you had) chronic obstructive pulmonary disease, C.O.P.D., emphysema or chronic bronchitis? 1 yes 2 no
+		'_RACE',        # 1 White only, nonHispanic, 2 Black only, nonHispanic, 3 American Indian or Alaskan Native only,Non-Hispanic 4 Asian only, nonHispanic  5 Native Hawaiian or other Pacific Islander only, Non-Hispanic 6 Other race only, nonHispanic 7 Multiracial, nonHispanic 8 Hispanic Respondents who reported they are of Hispanic origin. ( _HISPANC=1) 9 Don’t know/ Not sure/ Refused
+		'_EDUCAG',      # level of education completed 1 no grad high school, 2 high school, 3 some college, 4 graduated college, 9 don't know
+		'SEXVAR',       # Sex of Respondent 1 MALE, 2 FEMALE
+		'_TOTINDA',     # Exercise 1 Had physical activity or exercise 2 No physical activity or exercise in last 30 days 9 Don’t know/ Refused/ Missing
+		'_ASTHMS1',     # asthma? 1 current 2 former 3 never
+		'_DRDXAR2',     # ever arthritis? 1 Diagnosed with arthritis 2 Not diagnosed with arthritis
+		'_DENVST3',     # dentist in past year? 1 yes 2 no 9 don't know
+		'_SMOKER3',     # four-level smoker status: everyday smoker, someday smoker, former smoker, non-smoker
+		'PERSDOC2',     # personal doctor yes = 1, more = 2, no = 3 Do you have one person you think of as your personal doctor or health care provider? (If ´No´ ask ´Is there more than one or is there no person who you think of as your personal doctor or health care provider?´.)
 ]
+len(stroke_features)
 
 RFE_features = ['_STATE',       # State FIPS Code
                 # 'FMONTH',       # File Month
@@ -178,7 +179,6 @@ RFE_features = ['_STATE',       # State FIPS Code
                 '_INCOMG'   ,   # Income categories
                 '_DRNKWK1'  ]   # Calculated total number of alcoholic beverages consumed per week
 
-
 add_features = [
 		'DIABETE4',         # (Ever told) (you had) diabetes?
 		'CHCKDNY2',  # Not including kidney stones, bladder infection or incontinence, were you ever told you had kidney disease?  1 yes 2 no
@@ -200,21 +200,10 @@ add_features = [
 ]
 
 
-len(stroke_features)
-
-
 def load_data(name):
 	data_1 = pd.read_sas('./source/' + name)
 	data_2 = data_1.copy()
 	return data_1, data_2
-
-
-def get_mae(max_leaf_nodes, train_X, val_X, train_y, val_y):
-    model = DecisionTreeRegressor(max_leaf_nodes=max_leaf_nodes, random_state=0)
-    model.fit(train_X, train_y)
-    preds_val = model.predict(val_X)
-    mae = mean_absolute_error(val_y, preds_val)
-    return mae
 
 
 def clean_data(data):

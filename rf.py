@@ -345,7 +345,7 @@ if __name__ ==  "__main__":
 	# X_cats.head()
 	
 	rf = RandomForestClassifier(random_state=random_state)
-	rf.fit(train_X, train_y)    # X, y)  # X_rus, y_rus)  # X_nm, y_nm)  #
+	rf.fit(X_rus, y_rus)  # X_nm, y_nm)  # train_X, train_y)    # X, y)  #
 	
 	dump(rf, model_name, compress=3)
 

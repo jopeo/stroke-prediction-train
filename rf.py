@@ -333,14 +333,14 @@ if __name__ ==  "__main__":
 	# y_cc.value_counts()
 	# X_cc.shape
 	
-	# nm = NearMiss(version=3)
-	# X_nm, y_nm = nm.fit_resample(X, y)
-	# y_nm.value_counts()
-	# X_nm.shape
+	nm = NearMiss(version=1)
+	X_nm, y_nm = nm.fit_resample(X, y)
+	y_nm.value_counts()
+	X_nm.shape
 	
 	
-	train_X, val_X, train_y, val_y = train_test_split(X, y, # X_cc, y_cc,  # X_nm, y_nm,  # X_rus, y_rus,  #
-	                                                  random_state=random_state)  # , , stratify=y)  #
+	train_X, val_X, train_y, val_y = train_test_split(X_nm, y_nm,  # X_rus, y_rus,  # X, y, # X_cc, y_cc,  #
+	                                                  random_state=random_state)	# , # , stratify=y)  # )
 	train_X.shape
 	train_y.describe()
 	train_y.value_counts()

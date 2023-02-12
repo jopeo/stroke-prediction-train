@@ -15,6 +15,13 @@ from sklearn.impute import SimpleImputer
 from joblib import dump, load
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, validation_curve
 from imblearn.under_sampling import ClusterCentroids, RandomUnderSampler, NearMiss
+import seaborn as sns
+from imblearn.under_sampling import ClusterCentroids, RandomUnderSampler, NearMiss
+from sklearn.metrics import mean_absolute_error, accuracy_score, confusion_matrix, classification_report, roc_curve, auc, roc_auc_score
+
+from bioinfokit.visuz import stat
+import warnings
+warnings.filterwarnings("ignore")
 
 
 raw_file = "raw.h5"
@@ -301,6 +308,7 @@ def process(prediction_data):
 
 if __name__ ==  "__main__":
 	data_o, data = load_data(raw_file)
+	data_o, data = load_data(cleaned_file)
 	data.shape
 
 	X, y = clean_data(data)
@@ -331,7 +339,7 @@ if __name__ ==  "__main__":
 	# X_nm.shape
 	
 	
-	train_X, val_X, train_y, val_y = train_test_split(X_rus, y_rus,  # X, y, # X_cc, y_cc,  # X_nm, y_nm,  #
+	train_X, val_X, train_y, val_y = train_test_split(X, y, # X_cc, y_cc,  # X_nm, y_nm,  # X_rus, y_rus,  #
 	                                                  random_state=random_state)  # , , stratify=y)  #
 	train_X.shape
 	train_y.describe()
@@ -345,7 +353,7 @@ if __name__ ==  "__main__":
 	# X_cats.head()
 	
 	rf = RandomForestClassifier(random_state=random_state)
-	rf.fit(X_rus, y_rus)  # X_nm, y_nm)  # train_X, train_y)    # X, y)  #
+	rf.fit(train_X, train_y)    # X, y)  # X_rus, y_rus)  # X_nm, y_nm)  #
 	
 	dump(rf, model_name, compress=3)
 
@@ -378,7 +386,13 @@ if __name__ ==  "__main__":
 	plt.show()
 	
 	print(classification_report(val_y, y_predictions))
-	
+
+	fpr, tpr, thresholds = roc_curve(y_true=list(val_y), y_score=list(y_predictions))
+	auc = roc_auc_score(y_true=list(val_y), y_score=list(y_predictions))
+	# plot ROC
+	stat.roc(fpr=fpr, tpr=tpr, auc=auc, shade_auc=True, per_class=True, legendpos='upper center',
+			 legendanchor=(0.5, 1.08), legendcols=3)
+
 	train_scoreNum, test_scoreNum = validation_curve(
 			RandomForestClassifier(),
 			X=train_X, y=train_y,
